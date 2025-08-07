@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages | Nexus</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary-color: #7209b7;
+            --accent-color: #4cc9f0;
+            --dark-color: #1a1a2e;
+            --light-color: #f8f9fa;
+            --gray-color: #6c757d;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --info-color: #2196f3;
+            --sidebar-width: 250px;
+            --header-height: 60px;
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fb;
+            color: #333;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: linear-gradient(180deg, var(--dark-color), #2a2a5a);
+            color: #fff;
+            z-index: 1000;
+            transition: var(--transition);
+            overflow-y: auto;
+        }
+        
+        .sidebar-collapsed {
+            left: calc(var(--sidebar-width) * -1);
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .sidebar-menu-item {
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .sidebar-menu-item:hover,
+        .sidebar-menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        
+        .sidebar-menu-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-divider {
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 10px 0;
+        }
+        
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+        
+        .user-role {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            transition: var(--transition);
+            min-height: 100vh;
+            padding-top: var(--header-height);
+        }
+        
+        .main-content-expanded {
+            margin-left: 0;
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: var(--sidebar-width);
+            height: var(--header-height);
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 999;
+            transition: var(--transition);
+        }
+        
+        .header-expanded {
+            left: 0;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            margin-right: 15px;
+            cursor: pointer;
+            display: none;
+        }
+        
+        .header-search {
+            position: relative;
+        }
+        
+        .header-search input {
+            border: none;
+            background-color: #f5f7fb;
+            padding: 8px 15px 8px 35px;
+            border-radius: 30px;
+            width: 250px;
+        }
+        
+        .header-search i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-color);
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+        
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-color);
+            margin-left: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .header-icon:hover {
+            background-color: #f5f7fb;
+            color: var(--primary-color);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--danger-color);
+        }
+        
+        /* Messages Content */
+        .messages-content {
+            padding: 0;
+            height: calc(100vh - var(--header-height));
+            display: flex;
+        }
+        
+        /* Messages Sidebar */
+        .messages-sidebar {
+            width: 300px;
+            background-color: #fff;
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .messages-sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .messages-sidebar-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+        
+        .messages-sidebar-action {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .messages-sidebar-action:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .messages-search {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .messages-search-input {
+            position: relative;
+        }
+        
+        .messages-search-input input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            background-color: #f5f7fb;
+        }
+        
+        .messages-search-input i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-color);
+        }
+        
+        .messages-tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .messages-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--gray-color);
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 2px solid transparent;
+        }
+        
+        .messages-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+        
+        .messages-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .message-item {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .message-item:hover {
+            background-color: #f5f7fb;
+        }
+        
+        .message-item.active {
+            background-color: rgba(67, 97, 238, 0.05);
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .message-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-right: 15px;
+            position: relative;
+        }
+        
+        .message-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .message-status {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+        }
+        
+        .message-status.online {
+            background-color: var(--success-color);
+        }
+        
+        .message-status.offline {
+            background-color: var(--gray-color);
+        }
+        
+        .message-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .message-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .message-name {
+            font-weight: 600;
+            margin-bottom: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .message-time {
+            font-size: 0.8rem;
+            color: var(--gray-color);
+        }
+        
+        .message-preview {
+            font-size: 0.9rem;
+            color: var(--gray-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+        }
+        
+        .message-badge {
+            display: inline-block;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 10px;
+            background-color: var(--primary-color);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-align: center;
+            line-height: 18px;
+            margin-left: 5px;
+            padding: 0 5px;
+        }
+        
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .chat-header {
+            padding: 15px 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .chat-user {
+            display: flex;
+            align-items: center;
+        }
+        
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 15px;
+            position: relative;
+        }
+        
+        .chat-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .chat-user-status {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+        }
+        
+        .chat-user-status.online {
+            background-color: var(--success-color);
+        }
+        
+        .chat-user-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-user-name {
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+        
+        .chat-user-status-text {
+            font-size: 0.8rem;
+            color: var(--gray-color);
+        }
+        
+        .chat-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .chat-action {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f5f7fb;
+            color: var(--gray-color);
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .chat-action:hover {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f5f7fb;
+        }
+        
+        .chat-date {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .chat-date:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background-color: #eee;
+            z-index: 1;
+        }
+        
+        .chat-date span {
+            background-color: #f5f7fb;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--gray-color);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .message {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .message.received {
+            justify-content: flex-start;
+        }
+        
+        .message.sent {
+            justify-content: flex-end;
+        }
+        
+        .message-content {
+            max-width: 70%;
+        }
+        
+        .message-bubble {
+            padding: 12px 15px;
+            border-radius: 10px;
+            position: relative;
+            margin-bottom: 5px;
+        }
+        
+        .message.received .message-bubble {
+            background-color: #fff;
+            border-top-left-radius: 0;
+        }
+        
+        .message.sent .message-bubble {
+            background-color: var(--primary-color);
+            color: #fff;
+            border-top-right-radius: 0;
+        }
+        
+        .message-meta {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            font-size: 0.8rem;
+            color: var(--gray-color);
+        }
+        
+        .message-time {
+            margin-right: 5px;
+        }
+        
+        .message-status i {
+            font-size: 0.7rem;
+            margin-left: 2px;
+        }
+        
+        .chat-input {
+            padding: 15px 20px;
+            background-color: #fff;
+            border-top: 1px solid #eee;
+        }
+        
+        .chat-input-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chat-input-action {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f5f7fb;
+            color: var(--gray-color);
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .chat-input-action:hover {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        
+        .chat-input-field {
+            flex: 1;
+            position: relative;
+        }
+        
+        .chat-input-field input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #eee;
+            border-radius: 30px;
+            background-color: #f5f7fb;
+        }
+        
+        .chat-input-send {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .chat-input-send:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        /* Empty State */
+        .empty-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            background-color: #f5f7fb;
+        }
+        
+        .empty-state-icon {
+            font-size: 5rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .empty-state-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .empty-state-description {
+            color: var(--gray-color);
+            max-width: 400px;
+            margin-bottom: 20px;
+        }
+        
+        .empty-state-action {
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .empty-state-action:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        /* Responsive */
+        @media (max-width: 991px) {
+            .sidebar {
+                left: calc(var(--sidebar-width) * -1);
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .header {
+                left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .header-search input {
+                width: 180px;
+            }
+            
+            .messages-sidebar {
+                position: absolute;
+                left: 0;
+                top: var(--header-height);
+                height: calc(100vh - var(--header-height));
+                z-index: 10;
+                transform: translateX(-100%);
+                transition: var(--transition);
+            }
+            
+            .messages-sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .chat-area {
+                width: 100%;
+            }
+            
+            .chat-header {
+                padding: 10px 15px;
+            }
+            
+            .chat-messages {
+                padding: 15px;
+            }
+            
+            .message-content {
+                max-width: 85%;
+            }
+        }
+        
+        @media (max-width: 575px) {
+            .header-search {
+                display: none;
+            }
+            
+            .chat-actions {
+                gap: 5px;
+            }
+            
+            .chat-action {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .chat-input {
+                padding: 10px 15px;
+            }
+            
+            .chat-input-action {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .chat-input-send {
+                width: 35px;
+                height: 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">Nexus</div>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="sidebar-menu-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="projects.html" class="sidebar-menu-item">
+                <i class="fas fa-project-diagram"></i>
+                <span>Projects</span>
+            </a>
+            <a href="analytics.html" class="sidebar-menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics</span>
+            </a>
+            <a href="workforce.html" class="sidebar-menu-item">
+                <i class="fas fa-users"></i>
+                <span>Workforce</span>
+            </a>
+            <a href="supply-chain.html" class="sidebar-menu-item">
+                <i class="fas fa-truck"></i>
+                <span>Supply Chain</span>
+            </a>
+            <a href="automation.html" class="sidebar-menu-item">
+                <i class="fas fa-robot"></i>
+                <span>Automation</span>
+            </a>
+            <div class="sidebar-divider"></div>
+            <a href="messages.html" class="sidebar-menu-item active">
+                <i class="fas fa-envelope"></i>
+                <span>Messages</span>
+            </a>
+            <a href="calendar.html" class="sidebar-menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Calendar</span>
+            </a>
+            <a href="settings.html" class="sidebar-menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </div>
+        <div class="sidebar-footer" onclick="redirectToProfile()">
+            <div class="user-info">
+                <img src="https://placehold.co/100" alt="User Avatar" class="user-avatar">
+                <div>
+                    <p class="user-name">John Doe</p>
+                    <p class="user-role">Administrator</p>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            function redirectToProfile() {
+                window.location.href = "profile.html"; // Redirect to profile.html
+            }
+        </script>
+        </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="header-left">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="header-search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search...">
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="header-icon">
+                <a href="notifications.html">
+                    <i class="far fa-bell"></i>
+                    <span class="notification-badge"></span>
+                </a>
+            </div>
+            <div class="header-icon">
+                <a href="messages.html">
+                    <i class="far fa-envelope"></i>
+                    <span class="notification-badge"></span>
+                </a>
+            </div>
+            <div class="header-icon">
+                <a href="settings.html">
+                    <i class="fas fa-cog"></i>
+                </a>
+            </div>
+        </div>
+        
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <div class="messages-content">
+            <!-- Messages Sidebar -->
+            <div class="messages-sidebar" id="messagesSidebar">
+                <div class="messages-sidebar-header">
+                    <h5 class="messages-sidebar-title">Messages</h5>
+                    <button class="messages-sidebar-action">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                <div class="messages-search">
+                    <div class="messages-search-input">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search messages...">
+                    </div>
+                </div>
+                <div class="messages-tabs">
+                    <div class="messages-tab active">All</div>
+                    <div class="messages-tab">Unread</div>
+                    <div class="messages-tab">Important</div>
+                </div>
+                <div class="messages-list">
+                    <div class="message-item active" data-user-id="1">
+                        <div class="message-avatar">
+                            <img src="https://placehold.co/100" alt="User Avatar">
+                            <span class="message-status online"></span>
+                        </div>
+                        <div class="message-info">
+                            <div class="message-header">
+                                <h6 class="message-name">Sarah Johnson</h6>
+                                <span class="message-time">10:45 AM</span>
+                            </div>
+                            <div class="message-preview">
+                                <span>I've updated the project timeline...</span>
+                                <span class="message-badge">2</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message-item" data-user-id="2">
+                        <div class="message-avatar">
+                            <img src="https://placehold.co/100" alt="User Avatar">
+                            <span class="message-status offline"></span>
+                        </div>
+                        <div class="message-info">
+                            <div class="message-header">
+                                <h6 class="message-name">Michael Chen</h6>
+                                <span class="message-time">Yesterday</span>
+                            </div>
+                            <div class="message-preview">
+                                <span>Can we schedule a meeting to discuss...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message-item" data-user-id="3">
+                        <div class="message-avatar">
+                            <img src="https://placehold.co/100" alt="User Avatar">
+                            <span class="message-status online"></span>
+                        </div>
+                        <div class="message-info">
+                            <div class="message-header">
+                                <h6 class="message-name">Emily Wilson</h6>
+                                <span class="message-time">Yesterday</span>
+                            </div>
+                            <div class="message-preview">
+                                <span>The client approved our proposal!</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message-item" data-user-id="4">
+                        <div class="message-avatar">
+                            <img src="https://placehold.co/100" alt="User Avatar">
+                            <span class="message-status offline"></span>
+                        </div>
+                        <div class="message-info">
+                            <div class="message-header">
+                                <h6 class="message-name">Robert Brown</h6>
+                                <span class="message-time">2 days ago</span>
+                            </div>
+                            <div class="message-preview">
+                                <span>I need the financial report by...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message-item" data-user-id="5">
+                        <div class="message-avatar">
+                            <img src="https://placehold.co/100" alt="User Avatar">
+                            <span class="message-status online"></span>
+                        </div>
+                        <div class="message-info">
+                            <div class="message-header">
+                                <h6 class="message-name">Jessica Lee</h6>
+                                <span class="message-time">3 days ago</span>
+                            </div>
+                            <div class="message-preview">
+                                <span>Thanks for your help with the project!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Area -->
+            <div class="chat-area">
+                <div class="chat-header">
+                    <div class="chat-user">
+                        <div class="chat-avatar">
+                            <img src="https://placehold.co/100" alt="User Avatar">
+                            <span class="chat-user-status online"></span>
+                        </div>
+                        <div class="chat-user-info">
+                            <h6 class="chat-user-name">Sarah Johnson</h6>
+                            <span class="chat-user-status-text">Online</span>
+                        </div>
+                    </div>
+                    <div class="chat-actions">
+                        <button class="chat-action">
+                            <i class="fas fa-phone"></i>
+                        </button>
+                        <button class="chat-action">
+                            <i class="fas fa-video"></i>
+                        </button>
+                        <button class="chat-action">
+                            <i class="fas fa-info-circle"></i>
+                        </button>
+                        <button class="chat-action">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="chat-messages">
+                    <div class="chat-date">
+                        <span>Today</span>
+                    </div>
+                    <div class="message received">
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                Hi John, I've updated the project timeline. Can you take a look when you have a moment?
+                            </div>
+                            <div class="message-meta">
+                                <span class="message-time">10:30 AM</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message sent">
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                Sure, I'll check it out right away. Is there anything specific I should focus on?
+                            </div>
+                            <div class="message-meta">
+                                <span class="message-time">10:32 AM</span>
+                                <span class="message-status">
+                                    <i class="fas fa-check-double"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message received">
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                Yes, please review the development phase. I've adjusted some deadlines based on the team's feedback.
+                            </div>
+                            <div class="message-meta">
+                                <span class="message-time">10:35 AM</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message received">
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                Also, the client requested a meeting next week to discuss progress. Are you available on Tuesday at 2 PM?
+                            </div>
+                            <div class="message-meta">
+                                <span class="message-time">10:36 AM</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message sent">
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                I'll take a closer look at the development phase. And yes, Tuesday at 2 PM works for me. Should we prepare a presentation for the client?
+                            </div>
+                            <div class="message-meta">
+                                <span class="message-time">10:40 AM</span>
+                                <span class="message-status">
+                                    <i class="fas fa-check-double"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message received">
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                That would be great! Let's collaborate on the presentation. I'll start working on an outline and share it with you by the end of the day.
+                            </div>
+                            <div class="message-meta">
+                                <span class="message-time">10:45 AM</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <div class="chat-input-container">
+                        <button class="chat-input-action">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <div class="chat-input-field">
+                            <input type="text" placeholder="Type a message...">
+                        </div>
+                        <button class="chat-input-action">
+                            <i class="far fa-smile"></i>
+                        </button>
+                        <button class="chat-input-send">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sidebar Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const header = document.getElementById('header');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const menuToggle = document.getElementById('menuToggle');
+            
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('sidebar-collapsed');
+                mainContent.classList.toggle('main-content-expanded');
+                header.classList.toggle('header-expanded');
+            });
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
+            
+            // Mobile Messages Sidebar Toggle
+            const messagesSidebar = document.getElementById('messagesSidebar');
+            
+            if (window.innerWidth <= 767) {
+                document.querySelectorAll('.message-item').forEach(item => {
+                    item.addEventListener('click', function() {
+                        messagesSidebar.classList.remove('active');
+                    });
+                });
+                
+                document.querySelector('.chat-user').addEventListener('click', function() {
+                    messagesSidebar.classList.add('active');
+                });
+            }
+        });
+    </script>
+    <script src="js/chat.js"></script>
+    <script>
+        // Initialize chat manager with current user ID
+        const chatManager = new ChatManager(1); // Replace 1 with actual user ID
+    </script>
+</body>
+</html>

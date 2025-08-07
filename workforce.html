@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workforce Management | Nexus</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.35.3/dist/apexcharts.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary-color: #7209b7;
+            --accent-color: #4cc9f0;
+            --dark-color: #1a1a2e;
+            --light-color: #f8f9fa;
+            --gray-color: #6c757d;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --info-color: #2196f3;
+            --sidebar-width: 250px;
+            --header-height: 60px;
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fb;
+            color: #333;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: linear-gradient(180deg, var(--dark-color), #2a2a5a);
+            color: #fff;
+            z-index: 1000;
+            transition: var(--transition);
+            overflow-y: auto;
+        }
+        
+        .sidebar-collapsed {
+            left: calc(var(--sidebar-width) * -1);
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .sidebar-menu-item {
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .sidebar-menu-item:hover,
+        .sidebar-menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        
+        .sidebar-menu-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-divider {
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 10px 0;
+        }
+        
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+        
+        .user-role {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            transition: var(--transition);
+            min-height: 100vh;
+            padding-top: var(--header-height);
+        }
+        
+        .main-content-expanded {
+            margin-left: 0;
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: var(--sidebar-width);
+            height: var(--header-height);
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 999;
+            transition: var(--transition);
+        }
+        
+        .header-expanded {
+            left: 0;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            margin-right: 15px;
+            cursor: pointer;
+            display: none;
+        }
+        
+        .header-search {
+            position: relative;
+        }
+        
+        .header-search input {
+            border: none;
+            background-color: #f5f7fb;
+            padding: 8px 15px 8px 35px;
+            border-radius: 30px;
+            width: 250px;
+        }
+        
+        .header-search i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-color);
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+        
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-color);
+            margin-left: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .header-icon:hover {
+            background-color: #f5f7fb;
+            color: var(--primary-color);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--danger-color);
+        }
+        
+        /* Workforce Content */
+        .workforce-content {
+            padding: 20px;
+        }
+        
+        .page-title {
+            margin-bottom: 20px;
+        }
+        
+        .page-title h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .breadcrumb {
+            margin-bottom: 0;
+        }
+        
+        .breadcrumb-item a {
+            color: var(--gray-color);
+            text-decoration: none;
+        }
+        
+        .breadcrumb-item.active {
+            color: var(--primary-color);
+        }
+        
+        /* Workforce Stats */
+        .workforce-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .stat-icon.employees {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .stat-icon.departments {
+            background-color: rgba(114, 9, 183, 0.1);
+            color: var(--secondary-color);
+        }
+        
+        .stat-icon.utilization {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+        }
+        
+        .stat-icon.cost {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .stat-info h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-info p {
+            margin-bottom: 0;
+            color: var(--gray-color);
+        }
+        
+        /* Department Distribution */
+        .department-distribution {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        
+        .department-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .department-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+        
+        .department-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .department-action {
+            background: none;
+            border: none;
+            color: var(--gray-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .department-action:hover {
+            color: var(--primary-color);
+        }
+        
+        .department-chart {
+            height: 300px;
+        }
+        
+        /* Employee List */
+        .employee-list {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        
+        .employee-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .employee-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+        
+        .employee-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .employee-action {
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .employee-action.add {
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+        }
+        
+        .employee-action.add:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .employee-action.filter {
+            background-color: transparent;
+            color: var(--gray-color);
+            border: 1px solid #ddd;
+        }
+        
+        .employee-action.filter:hover {
+            background-color: #f5f7fb;
+        }
+        
+        .employee-table {
+            width: 100%;
+        }
+        
+        .employee-table th {
+            font-weight: 600;
+            color: var(--gray-color);
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+        
+        .employee-table td {
+            padding: 15px 10px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+        
+        .employee-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .employee-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+        
+        .employee-name {
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+        
+        .employee-email {
+            font-size: 0.8rem;
+            color: var(--gray-color);
+        }
+        
+        .employee-department {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .employee-department.development {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .employee-department.design {
+            background-color: rgba(114, 9, 183, 0.1);
+            color: var(--secondary-color);
+        }
+        
+        .employee-department.marketing {
+            background-color: rgba(76, 201, 240, 0.1);
+            color: var(--accent-color);
+        }
+        
+        .employee-department.hr {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+        }
+        
+        .employee-department.finance {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .employee-status {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .employee-status.active {
+            background-color: var(--success-color);
+        }
+        
+        .employee-status.inactive {
+            background-color: var(--danger-color);
+        }
+        
+        .employee-status.on-leave {
+            background-color: var(--warning-color);
+        }
+        
+        .employee-actions-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .employee-action-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f5f7fb;
+            color: var(--gray-color);
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .employee-action-btn:hover {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        
+        /* Skill Matrix */
+        .skill-matrix {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        
+        .skill-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .skill-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+        
+        .skill-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .skill-action {
+            background: none;
+            border: none;
+            color: var(--gray-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .skill-action:hover {
+            color: var(--primary-color);
+        }
+        
+        .skill-chart {
+            height: 300px;
+        }
+        
+        /* Upcoming Leave */
+        .upcoming-leave {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        
+        .leave-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .leave-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+        
+        .leave-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .leave-action {
+            background: none;
+            border: none;
+            color: var(--gray-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .leave-action:hover {
+            color: var(--primary-color);
+        }
+        
+        .leave-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .leave-item:last-child {
+            border-bottom: none;
+        }
+        
+        .leave-employee {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+        
+        .leave-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+        
+        .leave-name {
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+        
+        .leave-department {
+            font-size: 0.8rem;
+            color: var(--gray-color);
+        }
+        
+        .leave-date {
+            display: flex;
+            align-items: center;
+            margin-left: 20px;
+        }
+        
+        .leave-date i {
+            margin-right: 5px;
+            color: var(--warning-color);
+        }
+        
+        .leave-date-text {
+            font-weight: 600;
+        }
+        
+        .leave-duration {
+            margin-left: 20px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--warning-color);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        /* Responsive */
+        @media (max-width: 991px) {
+            .sidebar {
+                left: calc(var(--sidebar-width) * -1);
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .header {
+                left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .workforce-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .header-search input {
+                width: 180px;
+            }
+            
+            .workforce-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .employee-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .leave-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .leave-date,
+            .leave-duration {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+        }
+        
+        @media (max-width: 575px) {
+            .header-search {
+                display: none;
+            }
+            
+            .employee-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .employee-action {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">Nexus</div>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="sidebar-menu-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="projects.html" class="sidebar-menu-item">
+                <i class="fas fa-project-diagram"></i>
+                <span>Projects</span>
+            </a>
+            <a href="analytics.html" class="sidebar-menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics</span>
+            </a>
+            <a href="workforce.html" class="sidebar-menu-item active">
+                <i class="fas fa-users"></i>
+                <span>Workforce</span>
+            </a>
+            <a href="supply-chain.html" class="sidebar-menu-item">
+                <i class="fas fa-truck"></i>
+                <span>Supply Chain</span>
+            </a>
+            <a href="automation.html" class="sidebar-menu-item">
+                <i class="fas fa-robot"></i>
+                <span>Automation</span>
+            </a>
+            <div class="sidebar-divider"></div>
+            <a href="messages.html" class="sidebar-menu-item">
+                <i class="fas fa-envelope"></i>
+                <span>Messages</span>
+            </a>
+            <a href="calendar.html" class="sidebar-menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Calendar</span>
+            </a>
+            <a href="settings.html" class="sidebar-menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </div>
+        <div class="sidebar-footer" onclick="redirectToProfile()">
+            <div class="user-info">
+                <img src="https://placehold.co/100" alt="User Avatar" class="user-avatar">
+                <div>
+                    <p class="user-name">John Doe</p>
+                    <p class="user-role">Administrator</p>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            function redirectToProfile() {
+                window.location.href = "profile.html"; // Redirect to profile.html
+            }
+        </script>
+        </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="header-left">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="header-search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search employees...">
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="header-icon">
+                <a href="notifications.html">
+                    <i class="far fa-bell"></i>
+                    <span class="notification-badge"></span>
+                </a>
+            </div>
+            <div class="header-icon">
+                <a href="messages.html">
+                    <i class="far fa-envelope"></i>
+                    <span class="notification-badge"></span>
+                </a>
+            </div>
+            <div class="header-icon">
+                <a href="settings.html">
+                    <i class="fas fa-cog"></i>
+                </a>
+            </div>
+        </div>        
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <div class="workforce-content">
+            <div class="page-title">
+                <h1>Workforce Management</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="dashboard.html">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Workforce</li>
+                    </ol>
+                </nav>
+            </div>
+
+            <!-- Workforce Stats -->
+            <div class="workforce-stats">
+                <div class="stat-card">
+                    <div class="stat-icon employees">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>142</h3>
+                        <p>Total Employees</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon departments">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>5</h3>
+                        <p>Departments</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon utilization">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>85%</h3>
+                        <p>Resource Utilization</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon cost">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>$1.2M</h3>
+                        <p>Monthly Payroll</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Department Distribution & Skill Matrix -->
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="department-distribution">
+                        <div class="department-header">
+                            <h5 class="department-title">Department Distribution</h5>
+                            <div class="department-actions">
+                                <button class="department-action">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                                <button class="department-action">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="department-action">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="department-chart" id="departmentChart"></div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="skill-matrix">
+                        <div class="skill-header">
+                            <h5 class="skill-title">Skill Matrix</h5>
+                            <div class="skill-actions">
+                                <button class="skill-action">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                                <button class="skill-action">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="skill-action">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="skill-chart" id="skillChart"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Employee List -->
+            <div class="employee-list">
+                <div class="employee-header">
+                    <h5 class="employee-title">Employee Directory</h5>
+                    <div class="employee-actions">
+                        <button class="employee-action filter">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                        <button class="employee-action add">
+                            <i class="fas fa-plus"></i> Add Employee
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="employee-table">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Department</th>
+                                <th>Position</th>
+                                <th>Status</th>
+                                <th>Hire Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="employee-info">
+                                        <img src="https://placehold.co/100" alt="Employee" class="employee-avatar">
+                                        <div>
+                                            <p class="employee-name">John Doe</p>
+                                            <p class="employee-email">john.doe@example.com</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="employee-department development">Development</span></td>
+                                <td>Senior Developer</td>
+                                <td><span class="employee-status active"></span> Active</td>
+                                <td>Jan 15, 2023</td>
+                                <td>
+                                    <div class="employee-actions-cell">
+                                        <button class="employee-action-btn">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="employee-action-btn">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="employee-action-btn">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="employee-info">
+                                        <img src="https://placehold.co/100" alt="Employee" class="employee-avatar">
+                                        <div>
+                                            <p class="employee-name">Sarah Johnson</p>
+                                            <p class="employee-email">sarah.johnson@example.com</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="employee-department design">Design</span></td>
+                                <td>UI/UX Designer</td>
+                                <td><span class="employee-status active"></span> Active</td>
+                                <td>Mar 10, 2023</td>
+                                <td>
+                                    <div class="employee-actions-cell">
+                                        <button class="employee-action-btn">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="employee-action-btn">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="employee-action-btn">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="employee-info">
+                                        <img src="https://placehold.co/100" alt="Employee" class="employee-avatar">
+                                        <div>
+                                            <p class="employee-name">Michael Chen</p>
+                                            <p class="employee-email">michael.chen@example.com</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="employee-department marketing">Marketing</span></td>
+                                <td>Marketing Manager</td>
+                                <td><span class="employee-status on-leave"></span> On Leave</td>
+                                <td>Nov 5, 2022</td>
+                                <td>
+                                    <div class="employee-actions-cell">
+                                        <button class="employee-action-btn">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="employee-action-btn">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="employee-action-btn">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="employee-info">
+                                        <img src="https://placehold.co/100" alt="Employee" class="employee-avatar">
+                                        <div>
+                                            <p class="employee-name">Emily Wilson</p>
+                                            <p class="employee-email">emily.wilson@example.com</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="employee-department hr">HR</span></td>
+                                <td>HR Specialist</td>
+                                <td><span class="employee-status active"></span> Active</td>
+                                <td>Feb 20, 2023</td>
+                                <td>
+                                    <div class="employee-actions-cell">
+                                        <button class="employee-action-btn">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="employee-action-btn">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="employee-action-btn">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="employee-info">
+                                        <img src="https://placehold.co/100" alt="Employee" class="employee-avatar">
+                                        <div>
+                                            <p class="employee-name">Robert Brown</p>
+                                            <p class="employee-email">robert.brown@example.com</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="employee-department finance">Finance</span></td>
+                                <td>Financial Analyst</td>
+                                <td><span class="employee-status inactive"></span> Inactive</td>
+                                <td>Jul 12, 2022</td>
+                                <td>
+                                    <div class="employee-actions-cell">
+                                        <button class="employee-action-btn">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="employee-action-btn">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="employee-action-btn">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Upcoming Leave -->
+            <div class="upcoming-leave">
+                <div class="leave-header">
+                    <h5 class="leave-title">Upcoming Leave</h5>
+                    <div class="leave-actions">
+                        <button class="leave-action">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <button class="leave-action">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="leave-item">
+                    <div class="leave-employee">
+                        <img src="https://placehold.co/100" alt="Employee" class="leave-avatar">
+                        <div>
+                            <p class="leave-name">Michael Chen</p>
+                            <p class="leave-department">Marketing</p>
+                        </div>
+                    </div>
+                    <div class="leave-date">
+                        <i class="far fa-calendar-alt"></i>
+                        <span class="leave-date-text">Jan 15 - Jan 22, 2025</span>
+                    </div>
+                    <div class="leave-duration">7 Days</div>
+                </div>
+                <div class="leave-item">
+                    <div class="leave-employee">
+                        <img src="https://placehold.co/100" alt="Employee" class="leave-avatar">
+                        <div>
+                            <p class="leave-name">Sarah Johnson</p>
+                            <p class="leave-department">Design</p>
+                        </div>
+                    </div>
+                    <div class="leave-date">
+                        <i class="far fa-calendar-alt"></i>
+                        <span class="leave-date-text">Feb 5 - Feb 10, 2025</span>
+                    </div>
+                    <div class="leave-duration">5 Days</div>
+                </div>
+                <div class="leave-item">
+                    <div class="leave-employee">
+                        <img src="https://placehold.co/100" alt="Employee" class="leave-avatar">
+                        <div>
+                            <p class="leave-name">John Doe</p>
+                            <p class="leave-department">Development</p>
+                        </div>
+                    </div>
+                    <div class="leave-date">
+                        <i class="far fa-calendar-alt"></i>
+                        <span class="leave-date-text">Feb 15 - Feb 16, 2025</span>
+                    </div>
+                    <div class="leave-duration">2 Days</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.35.3/dist/apexcharts.min.js"></script>
+    <script>
+        // Sidebar Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const header = document.getElementById('header');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const menuToggle = document.getElementById('menuToggle');
+            
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('sidebar-collapsed');
+                mainContent.classList.toggle('main-content-expanded');
+                header.classList.toggle('header-expanded');
+            });
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
+            
+            // Department Chart
+            const departmentOptions = {
+                series: [45, 25, 15, 10, 5],
+                chart: {
+                    height: 300,
+                    type: 'pie',
+                },
+                labels: ['Development', 'Design', 'Marketing', 'HR', 'Finance'],
+                colors: ['#4361ee', '#7209b7', '#4cc9f0', '#4caf50', '#ff9800'],
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        chart: {
+                            width: 200
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }]
+            };
+            
+            const departmentChart = new ApexCharts(document.querySelector("#departmentChart"), departmentOptions);
+            departmentChart.render();
+            
+            // Skill Matrix Chart
+            const skillOptions = {
+                series: [{
+                    name: 'Technical Skills',
+                    data: [80, 65, 75, 50, 85]
+                }, {
+                    name: 'Soft Skills',
+                    data: [70, 85, 60, 90, 65]
+                }],
+                chart: {
+                    type: 'radar',
+                    height: 300,
+                    toolbar: {
+                        show: false
+                    }
+                },
+                xaxis: {
+                    categories: ['Development', 'Design', 'Marketing', 'HR', 'Finance']
+                },
+                yaxis: {
+                    show: false
+                },
+                markers: {
+                    size: 4
+                },
+                colors: ['#4361ee', '#4cc9f0']
+            };
+            
+            const skillChart = new ApexCharts(document.querySelector("#skillChart"), skillOptions);
+            skillChart.render();
+        });
+    </script>
+</body>
+</html>

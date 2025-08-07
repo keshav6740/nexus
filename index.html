@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus | Business Management Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <span class="logo-text">Nexus</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#solutions">Solutions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#pricing">Pricing</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link login-btn" href="login.html">Login</a></li>
+                    <li class="nav-item"><a class="nav-link btn btn-primary signup-btn" href="signup.html">Sign Up</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section with 3D Element -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 hero-text">
+                    <h1 class="display-4 fw-bold">One Platform for Your Entire Business</h1>
+                    <p class="lead">Streamline operations, enhance collaboration, and drive growth with our all-in-one business management solution.</p>
+                    <div class="hero-btns">
+                        <a href="signup.html" class="btn btn-primary btn-lg">Get Started</a>
+                        <a href="dashboard.html" class="btn btn-outline-light btn-lg ms-3">Watch Demo</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div id="hero-3d-container"></div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-wave">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="#ffffff" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,149.3C960,160,1056,160,1152,138.7C1248,117,1344,75,1392,53.3L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2>Powerful Features for Modern Businesses</h2>
+                <p class="lead">Everything you need to manage your business efficiently</p>
+            </div>
+            <div class="row g-4 py-5">
+                <div class="col-md-4 feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="feature-icon">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                            <h3>Project Management</h3>
+                            <p>Track progress, assign tasks, and collaborate with your team in real-time.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h3>Analytics & Insights</h3>
+                            <p>Make data-driven decisions with comprehensive analytics and reporting tools.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 feature-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="feature-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h3>Workforce Management</h3>
+                            <p>Optimize resource allocation and track employee performance efficiently.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 feature-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="feature-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <h3>Intelligent Automation</h3>
+                            <p>Automate repetitive tasks and workflows to increase productivity.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 feature-card" data-aos="fade-up" data-aos-delay="500">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="feature-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3>Risk Analysis</h3>
+                            <p>Identify and mitigate potential risks with AI-powered recommendations.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 feature-card" data-aos="fade-up" data-aos-delay="600">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="feature-icon">
+                                <i class="fas fa-truck"></i>
+                            </div>
+                            <h3>Supply Chain Management</h3>
+                            <p>Optimize your supply chain with real-time tracking and analytics.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solutions Section with Parallax -->
+    <section id="solutions" class="solutions-section parallax-section">
+        <div class="parallax-bg"></div>
+        <div class="container">
+            <div class="section-header text-center">
+                <h2>Tailored Solutions for Every Role</h2>
+                <p class="lead">Empower everyone in your organization</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6 solution-card" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <div class="solution-icon">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <h3>For Executives</h3>
+                            <p>Comprehensive dashboards and strategic insights to drive business growth.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 solution-card" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <div class="solution-icon">
+                                <i class="fas fa-tasks"></i>
+                                </div>
+                            <h3>For Managers</h3>
+                            <p>Tools to monitor team performance, track projects, and optimize resources.</p>
+                        </div>
+                    </div>
+                </div>                
+                <div class="col-lg-3 col-md-6 solution-card" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <div class="solution-icon">
+                                <i class="fas fa-users-cog"></i>
+                            </div>
+                            <h3>For Team Leaders</h3>
+                            <p>Collaborative features to streamline workflows and enhance team productivity.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 solution-card" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <div class="solution-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h3>For Employees</h3>
+                            <p>Intuitive interfaces to manage tasks, track progress, and collaborate effectively.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Preview Section -->
+    <section class="dashboard-preview">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2>Powerful Dashboard Experience</h2>
+                <p class="lead">Get a comprehensive view of your entire business at a glance</p>
+            </div>
+            <div class="dashboard-container">
+                <img src="dash.png" alt="Dashboard Preview" class="img-fluid dashboard-img">
+                <div class="dashboard-features">
+                    <div class="dashboard-feature" data-aos="fade-right" data-aos-delay="100">
+                        <div class="feature-dot"></div>
+                        <div class="feature-content">
+                            <h4>Real-time Analytics</h4>
+                            <p>Monitor key metrics as they happen</p>
+                        </div>
+                    </div>
+                    <div class="dashboard-feature" data-aos="fade-right" data-aos-delay="200">
+                        <div class="feature-dot"></div>
+                        <div class="feature-content">
+                            <h4>Project Tracking</h4>
+                            <p>See all your projects and their status</p>
+                        </div>
+                    </div>
+                    <div class="dashboard-feature" data-aos="fade-right" data-aos-delay="300">
+                        <div class="feature-dot"></div>
+                        <div class="feature-content">
+                            <h4>Resource Allocation</h4>
+                            <p>Optimize your team's workload</p>
+                        </div>
+                    </div>
+                    <div class="dashboard-feature" data-aos="fade-right" data-aos-delay="400">
+                        <div class="feature-dot"></div>
+                        <div class="feature-content">
+                            <h4>Risk Indicators</h4>
+                            <p>Identify potential issues before they escalate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2>Simple, Transparent Pricing</h2>
+                <p class="lead">Choose the plan that works for your business</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6" data-aos="flip-left" data-aos-delay="100">
+                    <div class="card pricing-card h-100">
+                        <div class="card-body">
+                            <h3 class="pricing-title">Starter</h3>
+                            <div class="pricing-price">
+                                <span class="currency">$</span>
+                                <span class="amount">29</span>
+                                <span class="period">/month</span>
+                            </div>
+                            <ul class="pricing-features">
+                                <li><i class="fas fa-check"></i> Project Management</li>
+                                <li><i class="fas fa-check"></i> Basic Analytics</li>
+                                <li><i class="fas fa-check"></i> 5 Team Members</li>
+                                <li><i class="fas fa-check"></i> 10 Projects</li>
+                                <li class="disabled"><i class="fas fa-times"></i> Risk Analysis</li>
+                                <li class="disabled"><i class="fas fa-times"></i> Supply Chain Management</li>
+                                <li class="disabled"><i class="fas fa-times"></i> Advanced Automation</li>
+                            </ul>
+                            <a href="signup.html" class="btn btn-outline-primary btn-lg w-100">Get Started</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="flip-left" data-aos-delay="200">
+                    <div class="card pricing-card h-100 popular">
+                        <div class="popular-badge">Most Popular</div>
+                        <div class="card-body">
+                            <h3 class="pricing-title">Professional</h3>
+                            <div class="pricing-price">
+                                <span class="currency">$</span>
+                                <span class="amount">79</span>
+                                <span class="period">/month</span>
+                            </div>
+                            <ul class="pricing-features">
+                                <li><i class="fas fa-check"></i> Project Management</li>
+                                <li><i class="fas fa-check"></i> Advanced Analytics</li>
+                                <li><i class="fas fa-check"></i> 20 Team Members</li>
+                                <li><i class="fas fa-check"></i> Unlimited Projects</li>
+                                <li><i class="fas fa-check"></i> Risk Analysis</li>
+                                <li><i class="fas fa-check"></i> Supply Chain Management</li>
+                                <li class="disabled"><i class="fas fa-times"></i> Advanced Automation</li>
+                            </ul>
+                            <a href="signup.html" class="btn btn-primary btn-lg w-100">Get Started</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-12" data-aos="flip-left" data-aos-delay="300">
+                    <div class="card pricing-card h-100">
+                        <div class="card-body">
+                            <h3 class="pricing-title">Enterprise</h3>
+                            <div class="pricing-price">
+                                <span class="currency">$</span>
+                                <span class="amount">199</span>
+                                <span class="period">/month</span>
+                            </div>
+                            <ul class="pricing-features">
+                                <li><i class="fas fa-check"></i> Project Management</li>
+                                <li><i class="fas fa-check"></i> Advanced Analytics</li>
+                                <li><i class="fas fa-check"></i> Unlimited Team Members</li>
+                                <li><i class="fas fa-check"></i> Unlimited Projects</li>
+                                <li><i class="fas fa-check"></i> Risk Analysis</li>
+                                <li><i class="fas fa-check"></i> Supply Chain Management</li>
+                                <li><i class="fas fa-check"></i> Advanced Automation</li>
+                            </ul>
+                            <a href="signup.html" class="btn btn-outline-primary btn-lg w-100">Get Started</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2>What Our Customers Say</h2>
+                <p class="lead">Join thousands of satisfied businesses</p>
+            </div>
+            <div class="testimonial-carousel">
+                <div class="testimonial-item active">
+                    <div class="testimonial-content">
+                        <p>"Nexus has transformed how we manage our projects. The real-time analytics and collaboration tools have increased our productivity by 40%."</p>
+                        <div class="testimonial-author">
+                            <img src="https://placehold.co/100" alt="John Smith" class="testimonial-avatar">
+                            <div class="author-info">
+                                <h4>John Smith</h4>
+                                <p>CEO, TechCorp</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-item">
+                    <div class="testimonial-content">
+                        <p>"The risk analysis feature has helped us identify potential issues before they become problems. It's like having a crystal ball for our business."</p>
+                        <div class="testimonial-author">
+                            <img src="https://placehold.co/100" alt="Sarah Johnson" class="testimonial-avatar">
+                            <div class="author-info">
+                                <h4>Sarah Johnson</h4>
+                                <p>COO, InnovateCo</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-item">
+                    <div class="testimonial-content">
+                        <p>"Our supply chain efficiency has improved dramatically since implementing Nexus. We've reduced costs by 25% and improved delivery times."</p>
+                        <div class="testimonial-author">
+                            <img src="https://placehold.co/100" alt="Michael Chen" class="testimonial-avatar">
+                            <div class="author-info">
+                                <h4>Michael Chen</h4>
+                                <p>Supply Chain Director, GlobalTrade</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-controls">
+                <button class="testimonial-prev"><i class="fas fa-chevron-left"></i></button>
+                <div class="testimonial-dots">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+                <button class="testimonial-next"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h2>Ready to Transform Your Business?</h2>
+                    <p class="lead">Join thousands of companies that trust Nexus to streamline their operations.</p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <a href="signup.html" class="btn btn-light btn-lg">Start Free Trial</a>
+                    <a href="#contact" class="btn btn-outline-light btn-lg ms-2">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2>Get in Touch</h2>
+                <p class="lead">Have questions? Our team is here to help</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <h4>Address</h4>
+                                <p>123 Business Avenue, Tech City, TC 10010</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <h4>Phone</h4>
+                                <p>+91-9265684017</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h4>Email</h4>
+                                <p>keshavanjaniagrawal@gmail.com</p>
+                            </div>
+                        </div>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <form class="contact-form">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Your Name" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="email" class="form-control" placeholder="Your Email" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Subject">
+                        </div>
+                        <div class="mb-3">
+                            <textarea class="form-control" rows="5" placeholder="Your Message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg w-100">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="footer-brand">
+                        <h3>Nexus</h3>
+                        <p>The all-in-one business management platform that helps you streamline operations, enhance collaboration, and drive growth.</p>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6">
+                    <div class="footer-links">
+                        <h4>Product</h4>
+                        <ul>
+                            <li><a href="#">Features</a></li>
+                            <li><a href="#">Solutions</a></li>
+                            <li><a href="#">Pricing</a></li>
+                            <li><a href="#">Updates</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6">
+                    <div class="footer-links">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Careers</a></li>
+                            <li><a href="#">Blog</a></li>
+                            <li><a href="#">Press</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6">
+                    <div class="footer-links">
+                        <h4>Resources</h4>
+                        <ul>
+                            <li><a href="#">Documentation</a></li>
+                            <li><a href="#">Help Center</a></li>
+                            <li><a href="#">Community</a></li>
+                            <li><a href="#">Webinars</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6">
+                    <div class="footer-links">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                            <li><a href="#">Security</a></li>
+                            <li><a href="#">Compliance</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="copyright">
+                    <p>&copy; 2025 Nexus. All rights reserved.</p>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top"><i class="fas fa-arrow-up"></i></a>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.11.4/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.11.4/dist/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

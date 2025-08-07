@@ -1,0 +1,6 @@
+project_id,project_name,project_type,square_footage,num_floors,soil_condition_score,complexity_score,initial_estimated_duration,initial_estimated_cost,avg_daily_workers,equipment_utilization_rate,actual_duration,actual_cost_overrun,created_at,status
+1,Project Alpha,Metro,50000,5,6.5,8,180,1500000,120,0.85,200,25,2023-01-01,Active
+2,Project Beta,Highway,75000,3,7.0,7,120,1000000,80,0.90,130,18,2023-02-15,Active
+3,Project Gamma,Smart City,100000,10,8.0,9,240,2500000,150,0.80,300,30,2023-03-10,Planned
+4,Project Delta,Metro,60000,4,6.0,7,150,1200000,100,0.88,170,20,2023-04-05,Active
+5,Project Epsilon,Highway,85000,2,7.5,8,200,1800000,90,0.95,210,22,2023-05-20,Delayed

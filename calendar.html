@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar | Nexus</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary-color: #7209b7;
+            --accent-color: #4cc9f0;
+            --dark-color: #1a1a2e;
+            --light-color: #f8f9fa;
+            --gray-color: #6c757d;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --info-color: #2196f3;
+            --sidebar-width: 250px;
+            --header-height: 60px;
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fb;
+            color: #333;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: linear-gradient(180deg, var(--dark-color), #2a2a5a);
+            color: #fff;
+            z-index: 1000;
+            transition: var(--transition);
+            overflow-y: auto;
+        }
+        
+        .sidebar-collapsed {
+            left: calc(var(--sidebar-width) * -1);
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .sidebar-menu-item {
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .sidebar-menu-item:hover,
+        .sidebar-menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        
+        .sidebar-menu-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-divider {
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 10px 0;
+        }
+        
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+        
+        .user-role {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            transition: var(--transition);
+            min-height: 100vh;
+            padding-top: var(--header-height);
+        }
+        
+        .main-content-expanded {
+            margin-left: 0;
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: var(--sidebar-width);
+            height: var(--header-height);
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 999;
+            transition: var(--transition);
+        }
+        
+        .header-expanded {
+            left: 0;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            margin-right: 15px;
+            cursor: pointer;
+            display: none;
+        }
+        
+        .header-search {
+            position: relative;
+        }
+        
+        .header-search input {
+            border: none;
+            background-color: #f5f7fb;
+            padding: 8px 15px 8px 35px;
+            border-radius: 30px;
+            width: 250px;
+        }
+        
+        .header-search i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-color);
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+        
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-color);
+            margin-left: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .header-icon:hover {
+            background-color: #f5f7fb;
+            color: var(--primary-color);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--danger-color);
+        }
+        
+        /* Calendar Content */
+        .calendar-content {
+            padding: 20px;
+        }
+        
+        .page-title {
+            margin-bottom: 20px;
+        }
+        
+        .page-title h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .breadcrumb {
+            margin-bottom: 0;
+        }
+        
+        .breadcrumb-item a {
+            color: var(--gray-color);
+            text-decoration: none;
+        }
+        
+        .breadcrumb-item.active {
+            color: var(--primary-color);
+        }
+        
+        /* Calendar Header */
+        .calendar-header {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .calendar-navigation {
+            display: flex;
+            align-items: center;
+        }
+        
+        .calendar-nav-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f5f7fb;
+            color: var(--gray-color);
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-right: 10px;
+        }
+        
+        .calendar-nav-btn:hover {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        
+        .calendar-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0 15px;
+        }
+        
+        .calendar-today-btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .calendar-today-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .calendar-views {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .calendar-view-btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            background-color: #f5f7fb;
+            color: var(--gray-color);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .calendar-view-btn.active {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        
+        .calendar-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .calendar-action-btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .calendar-action-btn.create {
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+        }
+        
+        .calendar-action-btn.create:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .calendar-action-btn.filter {
+            background-color: transparent;
+            color: var(--gray-color);
+            border: 1px solid #ddd;
+        }
+        
+        .calendar-action-btn.filter:hover {
+            background-color: #f5f7fb;
+        }
+        
+        /* Calendar Grid */
+        .calendar-container {
+            display: flex;
+            height: calc(100vh - 300px);
+            min-height: 600px;
+        }
+        
+        .calendar-sidebar {
+            width: 250px;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-right: 20px;
+        }
+        
+        .mini-calendar {
+            margin-bottom: 20px;
+        }
+        
+        .mini-calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .mini-calendar-title {
+            font-weight: 600;
+        }
+        
+        .mini-calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .mini-calendar-nav-btn {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f5f7fb;
+            color: var(--gray-color);
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.8rem;
+        }
+        
+        .mini-calendar-nav-btn:hover {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        
+        .mini-calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        
+        .mini-calendar-day {
+            width: 100%;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .mini-calendar-day.header {
+            font-weight: 600;
+            color: var(--gray-color);
+            cursor: default;
+        }
+        
+        .mini-calendar-day.today {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        
+        .mini-calendar-day.has-event {
+            position: relative;
+        }
+        
+        .mini-calendar-day.has-event:after {
+            content: '';
+            position: absolute;
+            bottom: 3px;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+        }
+        
+        .mini-calendar-day.today.has-event:after {
+            background-color: #fff;
+        }
+        
+        .mini-calendar-day:not(.header):not(.today):hover {
+            background-color: #f5f7fb;
+        }
+        
+        .calendar-categories {
+            margin-bottom: 20px;
+        }
+        
+        .calendar-categories-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .calendar-category {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .calendar-category-checkbox {
+            margin-right: 10px;
+        }
+        
+        .calendar-category-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            margin-right: 10px;
+        }
+        
+        .calendar-category-color.work {
+            background-color: var(--primary-color);
+        }
+        
+        .calendar-category-color.personal {
+            background-color: var(--success-color);
+        }
+        
+        .calendar-category-color.meeting {
+            background-color: var(--warning-color);
+        }
+        
+        .calendar-category-color.deadline {
+            background-color: var(--danger-color);
+        }
+        
+        .calendar-category-color.other {
+            background-color: var(--info-color);
+        }
+        
+        .calendar-category-label {
+            font-size: 0.9rem;
+        }
+        
+        .upcoming-events {
+            margin-bottom: 20px;
+        }
+        
+        .upcoming-events-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .upcoming-event {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            background-color: #f5f7fb;
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .upcoming-event.work {
+            border-left-color: var(--primary-color);
+        }
+        
+        .upcoming-event.personal {
+            border-left-color: var(--success-color);
+        }
+        
+        .upcoming-event.meeting {
+            border-left-color: var(--warning-color);
+        }
+        
+        .upcoming-event.deadline {
+            border-left-color: var(--danger-color);
+        }
+        
+        .upcoming-event-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .upcoming-event-time {
+            font-size: 0.8rem;
+            color: var(--gray-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .upcoming-event-time i {
+            margin-right: 5px;
+        }
+        
+        .calendar-grid {
+            flex: 1;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            border-bottom: 1px solid #eee;
+        }
+        
+        .calendar-day-header {
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            border-right: 1px solid #eee;
+        }
+        
+        .calendar-day-header:last-child {
+            border-right: none;
+        }
+        
+        .calendar-day-header.weekend {
+            color: var(--gray-color);
+        }
+        
+        .calendar-weeks {
+            display: grid;
+            grid-template-rows: repeat(5, 1fr);
+            height: calc(100% - 50px);
+        }
+        
+        .calendar-week {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            border-bottom: 1px solid #eee;
+        }
+        
+        .calendar-week:last-child {
+            border-bottom: none;
+        }
+        
+        .calendar-date {
+            border-right: 1px solid #eee;
+            padding: 10px;
+            position: relative;
+            min-height: 100px;
+        }
+        
+        .calendar-date:last-child {
+            border-right: none;
+        }
+        
+        .calendar-date.today {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        .calendar-date.other-month {
+            background-color: #f9f9f9;
+            color: var(--gray-color);
+        }
+        
+        .calendar-date-number {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .calendar-date.today .calendar-date-number {
+            width: 25px;
+            height: 25px;
+            background-color: var(--primary-color);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .calendar-event {
+            padding: 5px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .calendar-event:hover {
+            transform: translateY(-2px);
+        }
+        
+        .calendar-event.work {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+            border-left: 2px solid var(--primary-color);
+        }
+        
+        .calendar-event.personal {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+            border-left: 2px solid var(--success-color);
+        }
+        
+        .calendar-event.meeting {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--warning-color);
+            border-left: 2px solid var(--warning-color);
+        }
+        
+        .calendar-event.deadline {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--danger-color);
+            border-left: 2px solid var(--danger-color);
+        }
+        
+        .calendar-event.other {
+            background-color: rgba(33, 150, 243, 0.1);
+            color: var(--info-color);
+            border-left: 2px solid var(--info-color);
+        }
+        
+        .more-events {
+            font-size: 0.8rem;
+            color: var(--gray-color);
+            cursor: pointer;
+        }
+        
+        .more-events:hover {
+            color: var(--primary-color);
+        }
+        
+        /* Responsive */
+        @media (max-width: 991px) {
+            .sidebar {
+                left: calc(var(--sidebar-width) * -1);
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .header {
+                left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .calendar-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .calendar-views {
+                margin-top: 15px;
+            }
+            
+            .calendar-actions {
+                margin-top: 15px;
+                width: 100%;
+            }
+            
+            .calendar-container {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .calendar-sidebar {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .header-search input {
+                width: 180px;
+            }
+            
+            .calendar-navigation {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .calendar-views {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .calendar-action-btn {
+                flex: 1;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 575px) {
+            .header-search {
+                display: none;
+            }
+            
+            .calendar-day-header {
+                padding: 10px 5px;
+                font-size: 0.8rem;
+            }
+            
+            .calendar-date {
+                padding: 5px;
+                min-height: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">Nexus</div>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="sidebar-menu-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="projects.html" class="sidebar-menu-item">
+                <i class="fas fa-project-diagram"></i>
+                <span>Projects</span>
+            </a>
+            <a href="analytics.html" class="sidebar-menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics</span>
+            </a>
+            <a href="workforce.html" class="sidebar-menu-item">
+                <i class="fas fa-users"></i>
+                <span>Workforce</span>
+            </a>
+            <a href="supply-chain.html" class="sidebar-menu-item">
+                <i class="fas fa-truck"></i>
+                <span>Supply Chain</span>
+            </a>
+            <a href="automation.html" class="sidebar-menu-item">
+                <i class="fas fa-robot"></i>
+                <span>Automation</span>
+            </a>
+            <div class="sidebar-divider"></div>
+            <a href="messages.html" class="sidebar-menu-item">
+                <i class="fas fa-envelope"></i>
+                <span>Messages</span>
+            </a>
+            <a href="calendar.html" class="sidebar-menu-item active">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Calendar</span>
+            </a>
+            <a href="settings.html" class="sidebar-menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </div>
+        <div class="sidebar-footer" onclick="redirectToProfile()">
+            <div class="user-info">
+                <img src="https://placehold.co/100" alt="User Avatar" class="user-avatar">
+                <div>
+                    <p class="user-name">John Doe</p>
+                    <p class="user-role">Administrator</p>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            function redirectToProfile() {
+                window.location.href = "profile.html"; // Redirect to profile.html
+            }
+        </script>
+        
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="header-left">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="header-search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search events...">
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="header-icon">
+                <a href="notifications.html">
+                    <i class="far fa-bell"></i>
+                    <span class="notification-badge"></span>
+                </a>
+            </div>
+            <div class="header-icon">
+                <a href="messages.html">
+                    <i class="far fa-envelope"></i>
+                    <span class="notification-badge"></span>
+                </a>
+            </div>
+            <div class="header-icon">
+                <a href="settings.html">
+                    <i class="fas fa-cog"></i>
+                </a>
+            </div>
+        </div>
+        
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <div class="calendar-content">
+            <div class="page-title">
+                <h1>Calendar</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="dashboard.html">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Calendar</li>
+                    </ol>
+                </nav>
+            </div>
+
+            <!-- Calendar Header -->
+            <div class="calendar-header">
+                <div class="calendar-navigation">
+                    <button class="calendar-nav-btn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <h5 class="calendar-title">January 2025</h5>
+                    <button class="calendar-nav-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <button class="calendar-today-btn">Today</button>
+                </div>
+                <div class="calendar-views">
+                    <button class="calendar-view-btn">Day</button>
+                    <button class="calendar-view-btn">Week</button>
+                    <button class="calendar-view-btn active">Month</button>
+                    <button class="calendar-view-btn">Year</button>
+                </div>
+                <div class="calendar-actions">
+                    <button class="calendar-action-btn filter">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                    <button class="calendar-action-btn create">
+                        <i class="fas fa-plus"></i> Create Event
+                    </button>
+                </div>
+            </div>
+
+            <!-- Calendar Container -->
+            <div class="calendar-container">
+                <!-- Calendar Sidebar -->
+                <div class="calendar-sidebar">
+                    <div class="mini-calendar">
+                        <div class="mini-calendar-header">
+                            <div class="mini-calendar-title">January 2025</div>
+                            <div class="mini-calendar-nav">
+                                <button class="mini-calendar-nav-btn">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button class="mini-calendar-nav-btn">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mini-calendar-grid">
+                            <div class="mini-calendar-day header">S</div>
+                            <div class="mini-calendar-day header">M</div>
+                            <div class="mini-calendar-day header">T</div>
+                            <div class="mini-calendar-day header">W</div>
+                            <div class="mini-calendar-day header">T</div>
+                            <div class="mini-calendar-day header">F</div>
+                            <div class="mini-calendar-day header">S</div>
+                            
+                            <div class="mini-calendar-day">29</div>
+                            <div class="mini-calendar-day">30</div>
+                            <div class="mini-calendar-day">31</div>
+                            <div class="mini-calendar-day">1</div>
+                            <div class="mini-calendar-day">2</div>
+                            <div class="mini-calendar-day">3</div>
+                            <div class="mini-calendar-day">4</div>
+                            
+                            <div class="mini-calendar-day">5</div>
+                            <div class="mini-calendar-day">6</div>
+                            <div class="mini-calendar-day">7</div>
+                            <div class="mini-calendar-day">8</div>
+                            <div class="mini-calendar-day">9</div>
+                            <div class="mini-calendar-day">10</div>
+                            <div class="mini-calendar-day">11</div>
+                            
+                            <div class="mini-calendar-day">12</div>
+                            <div class="mini-calendar-day">13</div>
+                            <div class="mini-calendar-day">14</div>
+                            <div class="mini-calendar-day today has-event">15</div>
+                            <div class="mini-calendar-day">16</div>
+                            <div class="mini-calendar-day has-event">17</div>
+                            <div class="mini-calendar-day">18</div>
+                            
+                            <div class="mini-calendar-day">19</div>
+                            <div class="mini-calendar-day has-event">20</div>
+                            <div class="mini-calendar-day">21</div>
+                            <div class="mini-calendar-day">22</div>
+                            <div class="mini-calendar-day">23</div>
+                            <div class="mini-calendar-day">24</div>
+                            <div class="mini-calendar-day">25</div>
+                            
+                            <div class="mini-calendar-day">26</div>
+                            <div class="mini-calendar-day">27</div>
+                            <div class="mini-calendar-day has-event">28</div>
+                            <div class="mini-calendar-day">29</div>
+                            <div class="mini-calendar-day">30</div>
+                            <div class="mini-calendar-day">31</div>
+                            <div class="mini-calendar-day">1</div>
+                        </div>
+                    </div>
+                    
+                    <div class="calendar-categories">
+                        <h6 class="calendar-categories-title">Categories</h6>
+                        <div class="calendar-category">
+                            <input type="checkbox" class="calendar-category-checkbox" id="work-category" checked>
+                            <span class="calendar-category-color work"></span>
+                            <label class="calendar-category-label" for="work-category">Work</label>
+                        </div>
+                        <div class="calendar-category">
+                            <input type="checkbox" class="calendar-category-checkbox" id="personal-category" checked>
+                            <span class="calendar-category-color personal"></span>
+                            <label class="calendar-category-label" for="personal-category">Personal</label>
+                        </div>
+                        <div class="calendar-category">
+                            <input type="checkbox" class="calendar-category-checkbox" id="meeting-category" checked>
+                            <span class="calendar-category-color meeting"></span>
+                            <label class="calendar-category-label" for="meeting-category">Meeting</label>
+                        </div>
+                        <div class="calendar-category">
+                            <input type="checkbox" class="calendar-category-checkbox" id="deadline-category" checked>
+                            <span class="calendar-category-color deadline"></span>
+                            <label class="calendar-category-label" for="deadline-category">Deadline</label>
+                        </div>
+                        <div class="calendar-category">
+                            <input type="checkbox" class="calendar-category-checkbox" id="other-category" checked>
+                            <span class="calendar-category-color other"></span>
+                            <label class="calendar-category-label" for="other-category">Other</label>
+                        </div>
+                    </div>
+                    
+                    <div class="upcoming-events">
+                        <h6 class="upcoming-events-title">Upcoming Events</h6>
+                        <div class="upcoming-event meeting">
+                            <div class="upcoming-event-title">Team Meeting</div>
+                            <div class="upcoming-event-time">
+                                <i class="far fa-clock"></i> Today, 2:00 PM
+                            </div>
+                        </div>
+                        <div class="upcoming-event deadline">
+                            <div class="upcoming-event-title">Project Deadline</div>
+                            <div class="upcoming-event-time">
+                                <i class="far fa-clock"></i> Jan 17, 5:00 PM
+                            </div>
+                        </div>
+                        <div class="upcoming-event work">
+                            <div class="upcoming-event-title">Client Presentation</div>
+                            <div class="upcoming-event-time">
+                                <i class="far fa-clock"></i> Jan 20, 10:00 AM
+                            </div>
+                        </div>
+                        <div class="upcoming-event personal">
+                            <div class="upcoming-event-title">Dentist Appointment</div>
+                            <div class="upcoming-event-time">
+                                <i class="far fa-clock"></i> Jan 28, 9:00 AM
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Calendar Grid -->
+                <div class="calendar-grid">
+                    <div class="calendar-days">
+                        <div class="calendar-day-header weekend">Sun</div>
+                        <div class="calendar-day-header">Mon</div>
+                        <div class="calendar-day-header">Tue</div>
+                        <div class="calendar-day-header">Wed</div>
+                        <div class="calendar-day-header">Thu</div>
+                        <div class="calendar-day-header">Fri</div>
+                        <div class="calendar-day-header weekend">Sat</div>
+                    </div>
+                    <div class="calendar-weeks">
+                        <div class="calendar-week">
+                            <div class="calendar-date other-month">
+                                <div class="calendar-date-number">29</div>
+                            </div>
+                            <div class="calendar-date other-month">
+                                <div class="calendar-date-number">30</div>
+                            </div>
+                            <div class="calendar-date other-month">
+                                <div class="calendar-date-number">31</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">1</div>
+                                <div class="calendar-event work">New Year's Day</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">2</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">3</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">4</div>
+                            </div>
+                        </div>
+                        <div class="calendar-week">
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">5</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">6</div>
+                                <div class="calendar-event work">Weekly Report</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">7</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">8</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">9</div>
+                                <div class="calendar-event personal">Gym Session</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">10</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">11</div>
+                            </div>
+                        </div>
+                        <div class="calendar-week">
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">12</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">13</div>
+                                <div class="calendar-event work">Weekly Report</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">14</div>
+                            </div>
+                            <div class="calendar-date today">
+                                <div class="calendar-date-number">15</div>
+                                <div class="calendar-event meeting">Team Meeting</div>
+                                <div class="calendar-event work">Project Review</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">16</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">17</div>
+                                <div class="calendar-event deadline">Project Deadline</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">18</div>
+                            </div>
+                        </div>
+                        <div class="calendar-week">
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">19</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">20</div>
+                                <div class="calendar-event work">Weekly Report</div>
+                                <div class="calendar-event work">Client Presentation</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">21</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">22</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">23</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">24</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">25</div>
+                            </div>
+                        </div>
+                        <div class="calendar-week">
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">26</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">27</div>
+                                <div class="calendar-event work">Weekly Report</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">28</div>
+                                <div class="calendar-event personal">Dentist Appointment</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">29</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">30</div>
+                            </div>
+                            <div class="calendar-date">
+                                <div class="calendar-date-number">31</div>
+                            </div>
+                            <div class="calendar-date other-month">
+                                <div class="calendar-date-number">1</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sidebar Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const header = document.getElementById('header');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const menuToggle = document.getElementById('menuToggle');
+            
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('sidebar-collapsed');
+                mainContent.classList.toggle('main-content-expanded');
+                header.classList.toggle('header-expanded');
+            });
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>

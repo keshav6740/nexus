@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrations Settings | Nexus</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary-color: #7209b7;
+            --accent-color: #4cc9f0;
+            --dark-color: #1a1a2e;
+            --light-color: #f8f9fa;
+            --gray-color: #6c757d;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --info-color: #2196f3;
+            --sidebar-width: 250px;
+            --header-height: 60px;
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fb;
+            color: #333;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: linear-gradient(180deg, var(--dark-color), #2a2a5a);
+            color: #fff;
+            z-index: 1000;
+            transition: var(--transition);
+            overflow-y: auto;
+        }
+        
+        .sidebar-collapsed {
+            left: calc(var(--sidebar-width) * -1);
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .sidebar-menu-item {
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .sidebar-menu-item:hover,
+        .sidebar-menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        
+        .sidebar-menu-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-divider {
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 10px 0;
+        }
+        
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+        
+        .user-role {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            transition: var(--transition);
+            min-height: 100vh;
+            padding-top: var(--header-height);
+        }
+        
+        .main-content-expanded {
+            margin-left: 0;
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: var(--sidebar-width);
+            height: var(--header-height);
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 999;
+            transition: var(--transition);
+        }
+        
+        .header-expanded {
+            left: 0;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            margin-right: 15px;
+            cursor: pointer;
+            display: none;
+        }
+        
+        .header-search {
+            position: relative;
+        }
+        
+        .header-search input {
+            border: none;
+            background-color: #f5f7fb;
+            padding: 8px 15px 8px 35px;
+            border-radius: 30px;
+            width: 250px;
+        }
+        
+        .header-search i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-color);
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+        
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-color);
+            margin-left: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .header-icon:hover {
+            background-color: #f5f7fb;
+            color: var(--primary-color);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--danger-color);
+        }
+        
+        /* Settings Content */
+        .settings-content {
+            padding: 20px;
+        }
+        
+        .page-title {
+            margin-bottom: 20px;
+        }
+        
+        .page-title h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .breadcrumb {
+            margin-bottom: 0;
+        }
+        
+        .breadcrumb-item a {
+            color: var(--gray-color);
+            text-decoration: none;
+        }
+        
+        .breadcrumb-item.active {
+            color: var(--primary-color);
+        }
+        
+        /* Settings Container */
+        .settings-container {
+            display: flex;
+            gap: 20px;
+        }
+        
+        /* Settings Sidebar */
+        .settings-sidebar {
+            width: 250px;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .settings-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .settings-nav-item {
+            margin-bottom: 5px;
+        }
+        
+        .settings-nav-link {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border-radius: 5px;
+            color: var(--gray-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .settings-nav-link:hover {
+            background-color: #f5f7fb;
+            color: var(--primary-color);
+        }
+        
+        .settings-nav-link.active {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        
+        .settings-nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Settings Main */
+        .settings-main {
+            flex: 1;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .settings-section {
+            margin-bottom: 30px;
+        }
+        
+        .settings-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .settings-section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .settings-form-group {
+            margin-bottom: 20px;
+        }
+        
+        .settings-form-label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .settings-form-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            transition: var(--transition);
+        }
+        
+        .settings-form-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
+        }
+        
+        .settings-form-select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            transition: var(--transition);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236c757d' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+        }
+        
+        .settings-form-select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
+        }
+        
+        .settings-form-textarea {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            transition: var(--transition);
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .settings-form-textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
+        }
+        
+        .settings-form-check {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .settings-form-check:last-child {
+            margin-bottom: 0;
+        }
+        
+        .settings-form-check-input {
+            margin-right: 10px;
+        }
+        
+        .settings-form-check-label {
+            font-weight: 400;
+        }
+        
+        .settings-form-help {
+            font-size: 0.8rem;
+            color: var(--gray-color);
+            margin-top: 5px;
+        }
+        
+        .settings-form-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .settings-form-btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .settings-form-btn.save {
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+        }
+        
+        .settings-form-btn.save:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .settings-form-btn.cancel {
+            background-color: transparent;
+            color: var(--gray-color);
+            border: 1px solid #ddd;
+        }
+        
+        .settings-form-btn.cancel:hover {
+            background-color: #f5f7fb;
+        }
+        
+        .settings-form-btn.danger {
+            background-color: var(--danger-color);
+            color: #fff;
+            border: none;
+        }
+        
+        .settings-form-btn.danger:hover {
+            background-color: #d32f2f;
+        }
+        
+        .settings-form-divider {
+            height: 1px;
+            background-color: #eee;
+            margin: 20px 0;
+        }
+        
+        .settings-form-note {
+            padding: 15px;
+            border-radius: 5px;
+            background-color: rgba(33, 150, 243, 0.1);
+            color: var(--info-color);
+            margin-bottom: 20px;
+        }
+        
+        .settings-form-note i {
+            margin-right: 10px;
+        }
+        
+        /* Integrations Specific */
+        .integrations-categories {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+        
+        .integration-category {
+            padding: 8px 15px;
+            border-radius: 20px;
+            background-color: #f5f7fb;
+            color: var(--gray-color);
+            font-size: 0.9rem;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .integration-category:hover {
+            background-color: #e9ecef;
+            color: var(--primary-color);
+        }
+        
+        .integration-category.active {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        
+        .integrations-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .integration-card {
+            border-radius: 10px;
+            border: 1px solid #eee;
+            padding: 20px;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .integration-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-color: #ddd;
+        }
+        
+        .integration-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .integration-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .integration-title {
+            flex: 1;
+        }
+        
+        .integration-name {
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+        
+        .integration-category-tag {
+            font-size: 0.8rem;
+            color: var(--gray-color);
+        }
+        
+        .integration-status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .integration-status.connected {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+        }
+        
+        .integration-status.popular {
+            background-color: rgba(33, 150, 243, 0.1);
+            color: var(--info-color);
+        }
+        
+        .integration-status.new {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .integration-description {
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            flex: 1;
+        }
+        
+        .integration-action {
+            width: 100%;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+        
+        .integration-action.connect {
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+        }
+        
+        .integration-action.connect:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .integration-action.connected {
+            background-color: transparent;
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+        
+        .integration-action.connected:hover {
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+        
+        .integration-action.configure {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+        
+        .integration-action.configure:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+        
+        .connected-integrations {
+            margin-top: 20px;
+        }
+        
+        .connected-integration {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            margin-bottom: 10px;
+        }
+        
+        .connected-integration-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+        
+        .connected-integration-info {
+            flex: 1;
+        }
+        
+        .connected-integration-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .connected-integration-status {
+            font-size: 0.8rem;
+            color: var(--success-color);
+        }
+        
+        .connected-integration-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .connected-integration-action {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            background-color: transparent;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .connected-integration-action:hover {
+            background-color: #f5f7fb;
+        }
+        
+        .connected-integration-action.configure {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .connected-integration-action.configure:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+        
+        .connected-integration-action.disconnect {
+            color: var(--danger-color);
+            border-color: var(--danger-color);
+        }
+        
+        .connected-integration-action.disconnect:hover {
+            background-color: rgba(244, 67, 54, 0.1);
+        }
+        
+        /* Responsive */
+        @media (max-width: 991px) {
+            .sidebar {
+                left: calc(var(--sidebar-width) * -1);
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .header {
+                left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .settings-container {
+                flex-direction: column;
+            }
+            
+            .settings-sidebar {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            
+            .integrations-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .header-search input {
+                width: 180px;
+            }
+            
+            .settings-form-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .settings-form-btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .connected-integration {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .connected-integration-logo {
+                margin-bottom: 10px;
+            }
+            
+            .connected-integration-actions {
+                margin-top: 10px;
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+        
+        @media (max-width: 575px) {
+            .header-search {
+                display: none;
+            }
+        }
+
+        /* Dark Theme */
+        body.dark-theme {
+            background-color: #121212;
+            color: #f5f7fb;
+        }
+
+        body.dark-theme .sidebar {
+            background: linear-gradient(180deg, #121212, #1e1e1e);
+        }
+
+        body.dark-theme .header {
+            background-color: #1e1e1e;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        body.dark-theme .header-icon {
+            color: #f5f7fb;
+        }
+
+        body.dark-theme .header-icon:hover {
+            background-color: #2d2d2d;
+            color: var(--primary-color);
+        }
+
+        body.dark-theme .header-search input {
+            background-color: #2d2d2d;
+            color: #f5f7fb;
+        }
+
+        body.dark-theme .settings-sidebar,
+        body.dark-theme .settings-main {
+            background-color: #1e1e1e;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        body.dark-theme .settings-nav-link {
+            color: #f5f7fb;
+        }
+
+        body.dark-theme .settings-nav-link:hover {
+            background-color: #2d2d2d;
+        }
+
+        body.dark-theme .settings-section-title {
+            border-bottom-color: #2d2d2d;
+        }
+
+        body.dark-theme .settings-form-input,
+        body.dark-theme .settings-form-select,
+        body.dark-theme .settings-form-textarea {
+            background-color: #2d2d2d;
+            border-color: #3d3d3d;
+            color: #f5f7fb;
+        }
+
+        body.dark-theme .settings-form-help,
+        body.dark-theme .breadcrumb-item,
+        body.dark-theme .breadcrumb-item a {
+            color: #adb5bd;
+        }
+
+        body.dark-theme .settings-form-divider {
+            background-color: #2d2d2d;
+        }
+
+        body.dark-theme .integration-category {
+            background-color: #2d2d2d;
+            color: #adb5bd;
+        }
+
+        body.dark-theme .integration-category:hover {
+            background-color: #3d3d3d;
+            color: var(--primary-color);
+        }
+
+        body.dark-theme .integration-card {
+            border-color: #2d2d2d;
+            background-color: #1e1e1e;
+        }
+
+        body.dark-theme .integration-card:hover {
+            border-color: #3d3d3d;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-theme .connected-integration {
+            background-color: #2d2d2d;
+        }
+
+        /* Blue Theme */
+        body.blue-theme .sidebar {
+            background: linear-gradient(180deg, #1a237e, #283593);
+        }
+
+        /* Purple Theme */
+        body.purple-theme .sidebar {
+            background: linear-gradient(180deg, #4a148c, #6a1b9a);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">Nexus</div>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="sidebar-menu-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="projects.html" class="sidebar-menu-item">
+                <i class="fas fa-project-diagram"></i>
+                <span>Projects</span>
+            </a>
+            <a href="analytics.html" class="sidebar-menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics</span>
+            </a>
+            <a href="workforce.html" class="sidebar-menu-item">
+                <i class="fas fa-users"></i>
+                <span>Workforce</span>
+            </a>
+            <a href="supply-chain.html" class="sidebar-menu-item">
+                <i class="fas fa-truck"></i>
+                <span>Supply Chain</span>
+            </a>
+            <a href="automation.html" class="sidebar-menu-item">
+                <i class="fas fa-robot"></i>
+                <span>Automation</span>
+            </a>
+            <div class="sidebar-divider"></div>
+            <a href="messages.html" class="sidebar-menu-item">
+                <i class="fas fa-envelope"></i>
+                <span>Messages</span>
+            </a>
+            <a href="calendar.html" class="sidebar-menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Calendar</span>
+            </a>
+            <a href="settings.html" class="sidebar-menu-item active">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </div>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <img src="https://placehold.co/100" alt="User Avatar" class="user-avatar">
+                <div>
+                    <p class="user-name">John Doe</p>
+                    <p class="user-role">Administrator</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="header-left">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="header-search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search...">
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="header-icon">
+                <i class="far fa-bell"></i>
+                <span class="notification-badge"></span>
+            </div>
+            <div class="header-icon">
+                <i class="far fa-envelope"></i>
+                <span class="notification-badge"></span>
+            </div>
+            <div class="header-icon">
+                <i class="fas fa-cog"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <div class="settings-content">
+            <div class="page-title">
+                <h1>Settings</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="dashboard.html">Home</a></li>
+                        <li class="breadcrumb-item"><a href="settings.html">Settings</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Integrations</li>
+                    </ol>
+                </nav>
+            </div>
+
+            <div class="settings-container">
+                <!-- Settings Sidebar -->
+                <div class="settings-sidebar">
+                    <ul class="settings-nav">
+                        <li class="settings-nav-item">
+                            <a href="settings.html" class="settings-nav-link">
+                                <i class="fas fa-user"></i> Account
+                            </a>
+                        </li>
+                        <li class="settings-nav-item">
+                            <a href="settings-notifications.html" class="settings-nav-link">
+                                <i class="fas fa-bell"></i> Notifications
+                            </a>
+                        </li>
+                        <li class="settings-nav-item">
+                            <a href="settings-security.html" class="settings-nav-link">
+                                <i class="fas fa-lock"></i> Security
+                            </a>
+                        </li>
+                        <li class="settings-nav-item">
+                            <a href="settings-appearance.html" class="settings-nav-link">
+                                <i class="fas fa-palette"></i> Appearance
+                            </a>
+                        </li>
+                        <li class="settings-nav-item">
+                            <a href="settings-team.html" class="settings-nav-link">
+                                <i class="fas fa-users"></i> Team
+                            </a>
+                        </li>
+                        <li class="settings-nav-item">
+                            <a href="settings-billing.html" class="settings-nav-link">
+                                <i class="fas fa-credit-card"></i> Billing
+                            </a>
+                        </li>
+                        <li class="settings-nav-item">
+                            <a href="settings-integrations.html" class="settings-nav-link active">
+                                <i class="fas fa-plug"></i> Integrations
+                            </a>
+                        </li>
+                        <li class="settings-nav-item">
+                            <a href="settings-api.html" class="settings-nav-link">
+                                <i class="fas fa-key"></i> API
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Settings Main -->
+                <div class="settings-main">
+                    <div class="settings-section">
+                        <h3 class="settings-section-title">Connected Integrations</h3>
+                        <div class="settings-form-note">
+                            <i class="fas fa-info-circle"></i> Manage your connected integrations. You can configure or disconnect these integrations at any time.
+                        </div>
+                        
+                        <div class="connected-integrations">
+                            <div class="connected-integration">
+                                <div class="connected-integration-logo">
+                                    <i class="fab fa-slack" style="color: #4A154B;"></i>
+                                </div>
+                                <div class="connected-integration-info">
+                                    <div class="connected-integration-name">Slack</div>
+                                    <div class="connected-integration-status">Connected to workspace: Acme Inc</div>
+                                </div>
+                                <div class="connected-integration-actions">
+                                    <button class="connected-integration-action configure">Configure</button>
+                                    <button class="connected-integration-action disconnect">Disconnect</button>
+                                </div>
+                            </div>
+                            
+                            <div class="connected-integration">
+                                <div class="connected-integration-logo">
+                                    <i class="fab fa-google" style="color: #4285F4;"></i>
+                                </div>
+                                <div class="connected-integration-info">
+                                    <div class="connected-integration-name">Google Calendar</div>
+                                    <div class="connected-integration-status">Connected to: john.doe@example.com</div>
+                                </div>
+                                <div class="connected-integration-actions">
+                                    <button class="connected-integration-action configure">Configure</button>
+                                    <button class="connected-integration-action disconnect">Disconnect</button>
+                                </div>
+                            </div>
+                            
+                            <div class="connected-integration">
+                                <div class="connected-integration-logo">
+                                    <i class="fab fa-github" style="color: #333;"></i>
+                                </div>
+                                <div class="connected-integration-info">
+                                    <div class="connected-integration-name">GitHub</div>
+                                    <div class="connected-integration-status">Connected to: AcmeInc</div>
+                                </div>
+                                <div class="connected-integration-actions">
+                                    <button class="connected-integration-action configure">Configure</button>
+                                    <button class="connected-integration-action disconnect">Disconnect</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-form-divider"></div>
+
+                    <div class="settings-section">
+                        <h3 class="settings-section-title">Available Integrations</h3>
+                        <div class="settings-form-note">
+                            <i class="fas fa-info-circle"></i> Browse and connect to available integrations to enhance your workflow and productivity.
+                        </div>
+                        
+                        <div class="integrations-categories">
+                            <div class="integration-category active">All</div>
+                            <div class="integration-category">Communication</div>
+                            <div class="integration-category">Productivity</div>
+                            <div class="integration-category">Development</div>
+                            <div class="integration-category">Analytics</div>
+                            <div class="integration-category">CRM</div>
+                            <div class="integration-category">Storage</div>
+                            <div class="integration-category">Marketing</div>
+                        </div>
+                        
+                        <div class="integrations-container">
+                            <div class="integration-card">
+                                <div class="integration-header">
+                                    <div class="integration-logo">
+                                        <i class="fab fa-slack" style="color: #4A154B;"></i>
+                                    </div>
+                                    <div class="integration-title">
+                                        <div class="integration-name">Slack</div>
+                                        <div class="integration-category-tag">Communication</div>
+                                    </div>
+                                    <div class="integration-status connected">Connected</div>
+                                </div>
+                                <div class="integration-description">
+                                    Receive notifications and updates from Nexus directly in your Slack workspace.
+                                </div>
+                                <button class="integration-action connected">Connected</button>
+                            </div>
+                            
+                            <div class="integration-card">
+                                <div class="integration-header">
+                                    <div class="integration-logo">
+                                        <i class="fab fa-dropbox" style="color: #0061FF;"></i>
+                                    </div>
+                                    <div class="integration-title">
+                                        <div class="integration-name">Dropbox</div>
+                                        <div class="integration-category-tag">Storage</div>
+                                    </div>
+                                    <div class="integration-status popular">Popular</div>
+                                </div>
+                                <div class="integration-description">
+                                    Store and access your files from Dropbox directly within Nexus.
+                                </div>
+                                <button class="integration-action connect">Connect</button>
+                            </div>
+                            
+                            <div class="integration-card">
+                                <div class="integration-header">
+                                    <div class="integration-logo">
+                                        <i class="fab fa-trello" style="color: #0079BF;"></i>
+                                    </div>
+                                    <div class="integration-title">
+                                        <div class="integration-name">Trello</div>
+                                        <div class="integration-category-tag">Productivity</div>
+                                    </div>
+                                </div>
+                                <div class="integration-description">
+                                    Sync your Trello boards with Nexus projects for seamless task management.
+                                </div>
+                                <button class="integration-action connect">Connect</button>
+                            </div>
+                            
+                            <div class="integration-card">
+                                <div class="integration-header">
+                                    <div class="integration-logo">
+                                        <i class="fab fa-github" style="color: #333;"></i>
+                                    </div>
+                                    <div class="integration-title">
+                                        <div class="integration-name">GitHub</div>
+                                        <div class="integration-category-tag">Development</div>
+                                    </div>
+                                    <div class="integration-status connected">Connected</div>
+                                </div>
+                                <div class="integration-description">
+                                    Link GitHub repositories to your projects and track code changes.
+                                </div>
+                                <button class="integration-action configure">Configure</button>
+                            </div>
+                            
+                            <div class="integration-card">
+                                <div class="integration-header">
+                                    <div class="integration-logo">
+                                        <i class="fab fa-google" style="color: #4285F4;"></i>
+                                    </div>
+                                    <div class="integration-title">
+                                        <div class="integration-name">Google Calendar</div>
+                                        <div class="integration-category-tag">Productivity</div>
+                                    </div>
+                                    <div class="integration-status connected">Connected</div>
+                                </div>
+                                <div class="integration-description">
+                                    Sync your Google Calendar with Nexus for seamless scheduling.
+                                </div>
+                                <button class="integration-action configure">Configure</button>
+                            </div>
+                            
+                            <div class="integration-card">
+                                <div class="integration-header">
+                                    <div class="integration-logo">
+                                        <i class="fab fa-mailchimp" style="color: #FFE01B;"></i>
+                                    </div>
+                                    <div class="integration-title">
+                                        <div class="integration-name">Mailchimp</div>
+                                        <div class="integration-category-tag">Marketing</div>
+                                    </div>
+                                </div>
+                                <div class="integration-description">
+                                    Connect your Mailchimp account to track email campaign performance.
+                                </div>
+                                <button class="integration-action connect">Connect</button>
+                            </div>
+                            
+                            <div class="integration-card">
+                                <div class="integration-header">
+                                    <div class="integration-logo">
+                                        <i class="fab fa-salesforce" style="color: #00A1E0;"></i>
+                                    </div>
+                                    <div class="integration-title">
+                                        <div class="integration-name">Salesforce</div>
+                                        <div class="integration-category-tag">CRM</div>
+                                    </div>
+                                    <div class="integration-status popular">Popular</div>
+                                </div>
+                                <div class="integration-description">
+                                    Integrate Salesforce CRM data with your Nexus projects.
+                                </div>
+                                <button class="integration-action connect">Connect</button>
+                            </div>
+                            
+                            <div class="integration-card">
+                                <div class="integration-header">
+                                    <div class="integration-logo">
+                                        <i class="fab fa-google-drive" style="color: #0F9D58;"></i>
+                                    </div>
+                                    <div class="integration-title">
+                                        <div class="integration-name">Google Drive</div>
+                                        <div class="integration-category-tag">Storage</div>
+                                    </div>
+                                </div>
+                                <div class="integration-description">
+                                    Access and manage your Google Drive files directly from Nexus.
+                                </div>
+                                <button class="integration-action connect">Connect</button>
+                            </div>
+                            
+                            <div class="integration-card">
+                                <div class="integration-header">
+                                    <div class="integration-logo">
+                                        <i class="fab fa-jira" style="color: #0052CC;"></i>
+                                    </div>
+                                    <div class="integration-title">
+                                        <div class="integration-name">Jira</div>
+                                        <div class="integration-category-tag">Development</div>
+                                    </div>
+                                </div>
+                                <div class="integration-description">
+                                    Sync your Jira issues with Nexus tasks and track progress.
+                                </div>
+                                <button class="integration-action connect">Connect</button>
+                            </div>
+                            
+                            <div class="integration-card">
+                                <div class="integration-header">
+                                    <div class="integration-logo">
+                                        <i class="fab fa-aws" style="color: #FF9900;"></i>
+                                    </div>
+                                    <div class="integration-title">
+                                        <div class="integration-name">AWS</div>
+                                        <div class="integration-category-tag">Development</div>
+                                    </div>
+                                    <div class="integration-status new">New</div>
+                                </div>
+                                <div class="integration-description">
+                                    Monitor and manage your AWS resources from within Nexus.
+                                </div>
+                                <button class="integration-action connect">Connect</button>
+                            </div>
+                            
+                            <div class="integration-card">
+                                <div class="integration-header">
+                                    <div class="integration-logo">
+                                        <i class="fab fa-microsoft" style="color: #00A4EF;"></i>
+                                    </div>
+                                    <div class="integration-title">
+                                        <div class="integration-name">Microsoft Teams</div>
+                                        <div class="integration-category-tag">Communication</div>
+                                    </div>
+                                </div>
+                                <div class="integration-description">
+                                    Receive notifications and updates from Nexus in Microsoft Teams.
+                                </div>
+                                <button class="integration-action connect">Connect</button>
+                            </div>
+                            
+                            <div class="integration-card">
+                                <div class="integration-header">
+                                    <div class="integration-logo">
+                                        <i class="fab fa-hubspot" style="color: #FF7A59;"></i>
+                                    </div>
+                                    <div class="integration-title">
+                                        <div class="integration-name">HubSpot</div>
+                                        <div class="integration-category-tag">CRM</div>
+                                    </div>
+                                </div>
+                                <div class="integration-description">
+                                    Connect your HubSpot CRM to track leads and customer data.
+                                </div>
+                                <button class="integration-action connect">Connect</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-form-divider"></div>
+
+                    <div class="settings-section">
+                        <h3 class="settings-section-title">Integration Settings</h3>
+                        
+                        <div class="settings-form-group">
+                            <label class="settings-form-label">Default Integration Behavior</label>
+                            <select class="settings-form-select">
+                                <option>Notify me before syncing data</option>
+                                <option selected>Sync data automatically</option>
+                                <option>Manual sync only</option>
+                            </select>
+                        </div>
+                        
+                        <div class="settings-form-group">
+                            <div class="settings-form-check">
+                                <input type="checkbox" class="settings-form-check-input" id="allow-personal-data" checked>
+                                <label class="settings-form-check-label" for="allow-personal-data">Allow integrations to access personal data</label>
+                            </div>
+                            <div class="settings-form-check">
+                                <input type="checkbox" class="settings-form-check-input" id="allow-notifications" checked>
+                                <label class="settings-form-check-label" for="allow-notifications">Allow integrations to send notifications</label>
+                            </div>
+                            <div class="settings-form-check">
+                                <input type="checkbox" class="settings-form-check-input" id="allow-writing" checked>
+                                <label class="settings-form-check-label" for="allow-writing">Allow integrations to write data</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-form-actions">
+                        <button class="settings-form-btn cancel">Cancel</button>
+                        <button class="settings-form-btn save">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sidebar Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const header = document.getElementById('header');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const menuToggle = document.getElementById('menuToggle');
+            
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('sidebar-collapsed');
+                mainContent.classList.toggle('main-content-expanded');
+                header.classList.toggle('header-expanded');
+            });
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
+            
+            // Settings Navigation
+            const settingsNavLinks = document.querySelectorAll('.settings-nav-link');
+            
+            settingsNavLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // We don't prevent default here to allow navigation to other settings pages
+                    settingsNavLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Integration Categories
+            const integrationCategories = document.querySelectorAll('.integration-category');
+            
+            integrationCategories.forEach(category => {
+                category.addEventListener('click', function() {
+                    integrationCategories.forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Load theme from localStorage
+            // const savedTheme = localStorage.getItem('nexus-theme');
+            // if (savedTheme) {
+            //     document.body.className = savedTheme;
+            // }
+        });
+    </script>
+</body>
+</html>
